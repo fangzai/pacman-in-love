@@ -1,8 +1,8 @@
 pacman = {}
 pacman.width = 32;
 pacman.height = 32;
-pacman.INITIAL_X = 240;
-pacman.INITIAL_Y = 304;
+pacman.INITIAL_X = 224;
+pacman.INITIAL_Y = 288;
 pacman.ORIENTATION_UP = math.rad(270);
 pacman.ORIENTATION_DOWN = math.rad(90);
 pacman.ORIENTATION_LEFT = math.rad(180);
@@ -18,7 +18,7 @@ function pacman.reset()
   pacman.dead = false;
   pacman.super = false;
   pacman.starting = true;
-  pacman.orientation = nil;
+  pacman.orientation = pacman.ORIENTATION_RIGHT;
 end
 
 function pacman.update(dt)
@@ -70,8 +70,8 @@ function pacman.keypressed(key, unicode)
 end
 
 function pacman.draw()
-  love.graphics.drawq(spriteSheet, pacman.QUAD, pacman.x, pacman.y,
-    pacman.orientation, 1, 1, pacman.width/2, pacman.height/2);
+  pacmanAnim:draw(pacman.x, pacman.y, pacman.orientation, 1, 1, pacman.width/2, pacman.height/2) 
+ 
 end
 
 pacman.reset();
