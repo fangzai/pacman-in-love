@@ -29,3 +29,15 @@ end
 function love.keypressed(key, unicode)
   pacman.keypressed(key,unicode);
 end
+
+function get_tile_index(obj)
+  local pos_x = math.floor(obj.x / 32);
+  if obj.x % 32 > 0 then
+    pos_x = pos_x + 1;
+  end
+  local pos_y = math.floor(obj.y / 32);
+  if obj.y % 32 > 0 then
+    pos_y = pos_y + 1;
+  end
+  return TiledMap_GetMapTile(pos_x, pos_y, 1);
+end

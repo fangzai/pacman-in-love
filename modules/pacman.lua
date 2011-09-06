@@ -49,7 +49,7 @@ function pacman.update(dt)
   if pacman.orientation == pacman.ORIENTATION_RIGHT then
     pacman.x = pacman.x + get_speed(dt);
   end
-
+  print(get_tile_index(pacman));
 end
 
 function pacman.keypressed(key, unicode)
