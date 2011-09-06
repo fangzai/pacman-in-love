@@ -1,8 +1,8 @@
 pacman = {}
 pacman.width = 32;
 pacman.height = 32;
-pacman.INITIAL_X = 224;
-pacman.INITIAL_Y = 288;
+pacman.INITIAL_X = 240;
+pacman.INITIAL_Y = 304;
 pacman.ORIENTATION_UP = math.rad(270);
 pacman.ORIENTATION_DOWN = math.rad(90);
 pacman.ORIENTATION_LEFT = math.rad(180);
@@ -18,7 +18,7 @@ function pacman.reset()
   pacman.dead = false;
   pacman.super = false;
   pacman.starting = true;
-  pacman.orientation = pacman.ORIENTATION_RIGHT;
+  pacman.orientation = nil;
 end
 
 function pacman.update(dt)
@@ -49,6 +49,7 @@ function pacman.update(dt)
   if pacman.orientation == pacman.ORIENTATION_RIGHT then
     pacman.x = pacman.x + get_speed(dt);
   end
+
 end
 
 function pacman.keypressed(key, unicode)
