@@ -9,6 +9,7 @@ pacman.ORIENTATION_LEFT = math.rad(180);
 pacman.ORIENTATION_RIGHT = math.rad(0);
 pacman.NORMAL_SPEED = 100;
 pacman.SUPER_SPEED = 130;
+pacman.BLANK_SPACE = 3;
 pacman.QUAD = love.graphics.newQuad(0,0,32,32,32,32);
 
 function pacman.reset()
@@ -28,6 +29,7 @@ function pacman.update(dt)
   
   local x, y = pacman.x, pacman.y;
   local box_x, box_y = pacman.x, pacman.y;
+  local colide = false;
   if pacman.x >= 478 then
     pacman.x = 0;
   else
@@ -43,23 +45,59 @@ function pacman.update(dt)
   if pacman.orientation == pacman.ORIENTATION_UP then
     y = pacman.y - get_speed(dt);
     box_y = y - pacman.height / 2;
+    colide = pacman.check_colision(box_x, box_y);
+    if not(colide) then
+      box_x = pacman.x - pacman.width / 2 + pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
+    if not(colide) then
+      box_x = pacman.x + pacman.width / 2 - pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
   end
   
   if pacman.orientation == pacman.ORIENTATION_DOWN then
     y = pacman.y + get_speed(dt);
     box_y = y + pacman.height / 2;
+    colide = pacman.check_colision(box_x, box_y);
+    if not(colide) then
+      box_x = x - pacman.width / 2 + pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
+    if not(colide) then
+      box_x = x + pacman.width / 2 - pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
   end
   
   if pacman.orientation == pacman.ORIENTATION_LEFT then
     x = pacman.x - get_speed(dt);
     box_x = x - pacman.width / 2;
+    colide = pacman.check_colision(box_x, box_y);
+    if not(colide) then
+      box_y = y - pacman.height / 2 + pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
+    if not(colide) then
+      box_y = y + pacman.height / 2 - pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
   end
   
   if pacman.orientation == pacman.ORIENTATION_RIGHT then
     x = pacman.x + get_speed(dt);
     box_x = x + pacman.width / 2;
+    colide = pacman.check_colision(box_x, box_y);
+    if not(colide) then
+      box_y = y - pacman.height / 2 + pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
+    if not(colide) then
+      box_y = y + pacman.height / 2 - pacman.BLANK_SPACE;
+      colide = pacman.check_colision(box_x, box_y);
+    end
   end
-  if not(pacman.check_colision(box_x, box_y)) then
+  if not(colide) then
     pacman.x = x;
     pacman.y = y;
   end
