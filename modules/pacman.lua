@@ -27,7 +27,7 @@ function pacman.update(dt)
   end
   
   local x, y = pacman.x, pacman.y;
-  
+  local box_x, box_y = pacman.x, pacman.y;
   if pacman.x >= 478 then
     pacman.x = 0;
   else
@@ -42,28 +42,36 @@ function pacman.update(dt)
 
   if pacman.orientation == pacman.ORIENTATION_UP then
     y = pacman.y - get_speed(dt);
+    box_y = y - pacman.height / 2;
   end
   
   if pacman.orientation == pacman.ORIENTATION_DOWN then
     y = pacman.y + get_speed(dt);
+    box_y = y + pacman.height / 2;
   end
   
   if pacman.orientation == pacman.ORIENTATION_LEFT then
     x = pacman.x - get_speed(dt);
+    box_x = x - pacman.width / 2;
   end
   
   if pacman.orientation == pacman.ORIENTATION_RIGHT then
     x = pacman.x + get_speed(dt);
+    box_x = x + pacman.width / 2;
   end
-  pacman.check_colision(x, y);
+  if not(pacman.check_colision(box_x, box_y)) then
+    pacman.x = x;
+    pacman.y = y;
+  end
 end
 
 function pacman.check_colision(x, y)
   local tile_pos_x, tile_pos_y = get_square_position(x, y);
   local next_tile = get_tile_index(tile_pos_x, tile_pos_y);
   if not(next_tile == 85) then
-    pacman.x = x;
-    pacman.y = y;
+    return false;
+  else
+    return true;
   end
 end
 
