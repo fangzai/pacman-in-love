@@ -26,13 +26,27 @@ function pacman.reset()
 end
 
 function pacman.update(dt)
-  function get_speed(dt)
-    return dt * pacman.speed;
+  local colided, x, y = pacman.calc_position(pacman.orientation_buffer,
+      dt * pacman.speed);
+      
+  if not(colided) then
+    pacman.box.update(x, y, pacman.width, pacman.height);
+    pacman.orientation = pacman.orientation_buffer;
+    pacman.x = x;
+    pacman.y = y;
+  else
+    colided, x, y = pacman.calc_position(pacman.orientation,
+        dt * pacman.speed);
+    if not(colided) then
+      pacman.box.update(x, y, pacman.width, pacman.height);
+      pacman.x = x;
+      pacman.y = y;
+    end
   end
-  
+end
+
+function pacman.calc_position(orientation, speed)
   local x, y = pacman.x, pacman.y;
-  local box_x, box_y = pacman.x, pacman.y;
-  local colide = false;
   if pacman.x >= 478 then
     pacman.x = 0;
   else
@@ -41,34 +55,29 @@ function pacman.update(dt)
     end
   end
 
-  if pacman.orientation_buffer == nil then
-    return;
+  if orientation == nil then
+    return false, pacman.x, pacman.y;
   end
 
-  if pacman.orientation_buffer == pacman.ORIENTATION_UP then
-    y = pacman.y - get_speed(dt);
+  if orientation == pacman.ORIENTATION_UP then
+    y = pacman.y - speed;
   end
   
-  if pacman.orientation_buffer == pacman.ORIENTATION_DOWN then
-    y = pacman.y + get_speed(dt);
+  if orientation == pacman.ORIENTATION_DOWN then
+    y = pacman.y + speed;
   end
   
-  if pacman.orientation_buffer == pacman.ORIENTATION_LEFT then
-    x = pacman.x - get_speed(dt);
+  if orientation == pacman.ORIENTATION_LEFT then
+    x = pacman.x - speed;
   end
   
-  if pacman.orientation_buffer == pacman.ORIENTATION_RIGHT then
-    x = pacman.x + get_speed(dt);
+  if orientation == pacman.ORIENTATION_RIGHT then
+    x = pacman.x + speed;
   end
-  pacman.box_buffer = create_box();
-  pacman.box_buffer.update(x, y, pacman.width - pacman.BLANK_SPACE, 
+  box = create_box();
+  box.update(x, y, pacman.width - pacman.BLANK_SPACE, 
       pacman.height - pacman.BLANK_SPACE);
-  if not(check_colision(pacman.box_buffer)) then
-    pacman.box.update(x, y, pacman.width, pacman.height);
-    pacman.orientation = pacman.orientation_buffer;
-    pacman.x = x;
-    pacman.y = y;
-  end
+  return check_colision(box), x, y;
 end
 
 function pacman.keypressed(key, unicode)
