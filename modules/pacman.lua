@@ -7,7 +7,7 @@ pacman.ORIENTATION_UP = math.rad(270);
 pacman.ORIENTATION_DOWN = math.rad(90);
 pacman.ORIENTATION_LEFT = math.rad(180);
 pacman.ORIENTATION_RIGHT = math.rad(0);
-pacman.NORMAL_SPEED = 100;
+pacman.NORMAL_SPEED = 1;
 pacman.SUPER_SPEED = 130;
 pacman.BLANK_SPACE = 1;
 pacman.QUAD = love.graphics.newQuad(0,0,32,32,32,32);
@@ -27,7 +27,7 @@ end
 
 function pacman.update(dt)
   local colided, x, y = pacman.calc_position(pacman.orientation_buffer,
-      dt * pacman.speed);
+      pacman.speed);
       
   if not(colided) then
     pacman.box.update(x, y, pacman.width, pacman.height);
@@ -36,7 +36,7 @@ function pacman.update(dt)
     pacman.y = y;
   else
     colided, x, y = pacman.calc_position(pacman.orientation,
-        dt * pacman.speed);
+        pacman.speed);
     if not(colided) then
       pacman.box.update(x, y, pacman.width, pacman.height);
       pacman.x = x;

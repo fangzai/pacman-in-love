@@ -68,10 +68,8 @@ function check_colision(box)
   local tile;
   for i=1,3 do
     for j=1,3 do
-       print(box[i][j][1] .. ' ' .. box[i][j][2]);
        tile = get_tile_index(get_square_position(box[i][j][1], box[i][j][2]));
       if (tile == 85) then
-        print('Colided');
         return true;
       end
     end
