@@ -9,7 +9,7 @@ pacman.ORIENTATION_LEFT = math.rad(180);
 pacman.ORIENTATION_RIGHT = math.rad(0);
 pacman.NORMAL_SPEED = 100;
 pacman.SUPER_SPEED = 130;
-pacman.BLANK_SPACE = 3;
+pacman.BLANK_SPACE = 1;
 pacman.QUAD = love.graphics.newQuad(0,0,32,32,32,32);
 
 function pacman.reset()
@@ -20,6 +20,9 @@ function pacman.reset()
   pacman.super = false;
   pacman.starting = true;
   pacman.orientation = nil;
+  pacman.orientation_buffer = nil;
+  pacman.box = create_box();
+  pacman.box_buffer = nil;
 end
 
 function pacman.update(dt)
@@ -38,102 +41,57 @@ function pacman.update(dt)
     end
   end
 
-  if pacman.orientation == nil then
+  if pacman.orientation_buffer == nil then
     return;
   end
 
-  if pacman.orientation == pacman.ORIENTATION_UP then
+  if pacman.orientation_buffer == pacman.ORIENTATION_UP then
     y = pacman.y - get_speed(dt);
-    box_y = y - pacman.height / 2;
-    colide = pacman.check_colision(box_x, box_y);
-    if not(colide) then
-      box_x = pacman.x - pacman.width / 2 + pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
-    if not(colide) then
-      box_x = pacman.x + pacman.width / 2 - pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
   end
   
-  if pacman.orientation == pacman.ORIENTATION_DOWN then
+  if pacman.orientation_buffer == pacman.ORIENTATION_DOWN then
     y = pacman.y + get_speed(dt);
-    box_y = y + pacman.height / 2;
-    colide = pacman.check_colision(box_x, box_y);
-    if not(colide) then
-      box_x = x - pacman.width / 2 + pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
-    if not(colide) then
-      box_x = x + pacman.width / 2 - pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
   end
   
-  if pacman.orientation == pacman.ORIENTATION_LEFT then
+  if pacman.orientation_buffer == pacman.ORIENTATION_LEFT then
     x = pacman.x - get_speed(dt);
-    box_x = x - pacman.width / 2;
-    colide = pacman.check_colision(box_x, box_y);
-    if not(colide) then
-      box_y = y - pacman.height / 2 + pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
-    if not(colide) then
-      box_y = y + pacman.height / 2 - pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
   end
   
-  if pacman.orientation == pacman.ORIENTATION_RIGHT then
+  if pacman.orientation_buffer == pacman.ORIENTATION_RIGHT then
     x = pacman.x + get_speed(dt);
-    box_x = x + pacman.width / 2;
-    colide = pacman.check_colision(box_x, box_y);
-    if not(colide) then
-      box_y = y - pacman.height / 2 + pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
-    if not(colide) then
-      box_y = y + pacman.height / 2 - pacman.BLANK_SPACE;
-      colide = pacman.check_colision(box_x, box_y);
-    end
   end
-  if not(colide) then
+  pacman.box_buffer = create_box();
+  pacman.box_buffer.update(x, y, pacman.width - pacman.BLANK_SPACE, 
+      pacman.height - pacman.BLANK_SPACE);
+  if not(check_colision(pacman.box_buffer)) then
+    pacman.box.update(x, y, pacman.width, pacman.height);
+    pacman.orientation = pacman.orientation_buffer;
     pacman.x = x;
     pacman.y = y;
   end
 end
 
-function pacman.check_colision(x, y)
-  local tile_pos_x, tile_pos_y = get_square_position(x, y);
-  local next_tile = get_tile_index(tile_pos_x, tile_pos_y);
-  if not(next_tile == 85) then
-    return false;
-  else
-    return true;
-  end
-end
-
 function pacman.keypressed(key, unicode)
   if key == "up" then
-    pacman.orientation = pacman.ORIENTATION_UP;
+    pacman.orientation_buffer = pacman.ORIENTATION_UP;
   end
   
   if key == "down" then
-    pacman.orientation = pacman.ORIENTATION_DOWN;
+    pacman.orientation_buffer = pacman.ORIENTATION_DOWN;
   end
   
   if key == "right" then
-    pacman.orientation = pacman.ORIENTATION_RIGHT;
+    pacman.orientation_buffer = pacman.ORIENTATION_RIGHT;
   end
   
   if key == "left" then
-    pacman.orientation = pacman.ORIENTATION_LEFT;
+    pacman.orientation_buffer = pacman.ORIENTATION_LEFT;
   end
 end
 
 function pacman.draw()
-  pacmanAnim:draw(pacman.x, pacman.y, pacman.orientation, 1, 1, pacman.width/2, pacman.height/2) 
- 
+  pacmanAnim:draw(pacman.x, pacman.y, pacman.orientation, 1, 1, pacman.width/2,
+      pacman.height/2);
 end
 
 pacman.reset();

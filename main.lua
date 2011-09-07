@@ -39,3 +39,42 @@ end
 function get_tile_index(pos_x, pos_y)
   return TiledMap_GetMapTile(pos_x, pos_y, 1);
 end
+
+function create_box()
+  box = {};
+  for i=1,3 do
+    box[i] = {};
+    for j=1,3 do
+      box[i][j] = {};
+    end
+  end
+  box.update = function (x, y, width, height)
+    box[1][1] = {x - width / 2, y - height / 2};
+    box[1][2] = {x - width / 2, y};
+    box[1][3] = {x - width / 2, y + height / 2};
+    
+    box[2][1] = {x, y - height / 2};
+    box[2][2] = {x, y};
+    box[2][3] = {x, y + height / 2};
+    
+    box[3][1] = {x + width / 2, y - height / 2};
+    box[3][2] = {x + width / 2, y};
+    box[3][3] = {x + width / 2, y + height / 2};
+  end
+  return box;
+end
+
+function check_colision(box)
+  local tile;
+  for i=1,3 do
+    for j=1,3 do
+       print(box[i][j][1] .. ' ' .. box[i][j][2]);
+       tile = get_tile_index(get_square_position(box[i][j][1], box[i][j][2]));
+      if (tile == 85) then
+        print('Colided');
+        return true;
+      end
+    end
+  end
+  return false;
+end
